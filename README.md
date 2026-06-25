@@ -1,31 +1,20 @@
-# Items Displayer Component
+# **React** Items Displayer
 
-### React Component
+## How it works
+Process a list of items
 
-        Tech used:
-        shadcn: not styled,
-        tailwind
+***items interface***
+```
+- id
+- name
+- Array<filter> (generic filter searching)
 
-### Items displayer
+example.: store product
 
-        <ItemsDisplayer items={items} search={variable}>
-
-#### ItemsDisplayer is a reusable grid component that renders a list of items.
-
-       Input: items (array of "items"), plus optional search and filter strings.
-
-       Behavior: it derives filteredItems by:
-       - filtering by category when filter is provided
-       - filtering by name when search is provided (case-insensitive)
-       Output: a responsive grid of cards showing product name, price, image, and actions.
-
-### Page.tsx
-
-        Its only a render:
-        - has the input and filter button "dropdown"
-        - displays the items
-
-## Run the project
-
-        cd itemsDisplayer
-        npm run dev
+- id
+- name
+- price
+- category
+```
+```
+```
