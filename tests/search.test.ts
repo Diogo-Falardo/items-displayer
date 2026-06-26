@@ -23,7 +23,6 @@ function searchInArray(search: search): string | item | Array<item> {
   }
 
   console.log('searching for', search)
-
   const result = items.filter((item) => {
 
     const matchesSearch = !search.search || item.name.toLowerCase().includes(search.search.toLowerCase())
