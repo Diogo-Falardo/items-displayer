@@ -1,8 +1,12 @@
-import { StrictMode, useState } from 'react'
+import React, { StrictMode, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 
 import { Displayer } from './displayer'
+import { Input } from './components/ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from './components/ui/popover'
+import { Button } from './components/ui/button'
+import { ListSortDescendingIcon, Search } from 'lucide-react'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -10,22 +14,49 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode >
 )
 
-
-type SearchBoxProps = {
-  value: string;
-  onChange: (value: string) => void
-}
-function SearchBox({ value, onChange }: SearchBoxProps) {
-  return (<input placeholder='search' className='border p-2' value={value} onChange={(e) => onChange(e.target.value)} />)
+type Search = {
+  search: string,
+  price: string,
+  category: string,
 }
 
+function SearchBox({ search, setSearch }: { search: Search, setSearch: React.Dispatch<React.SetStateAction<Search>> }) {
+
+  const handleSearchChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setSearch((prev) => ({ ...prev, [name]: value }))
+  }
+
+  if (search) {
+    console.log(search)
+  }
+  return (
+    <div className='flex gap-2 items-center'>
+      <Input name="search" placeholder='search' type='text' value={search.search ?? ""} onChange={handleSearchChanges} />
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant={"secondary"}><ListSortDescendingIcon /></Button>
+        </PopoverTrigger>
+        <PopoverContent>
+          <p>Price search</p>
+          <Input name='price' placeholder='price' type="number" value={search.price ?? ""} onChange={handleSearchChanges} />
+          <p>Category search</p>
+          <Input name='category' placeholder='category' type='text' value={search.category ?? ""} onChange={handleSearchChanges} />
+        </PopoverContent>
+      </Popover>
+    </div>
+
+  )
+
+}
 function App() {
+  const [search, setSearch] = useState({ search: "", price: "", category: "" })
 
-  const [search, setSearch] = useState("")
+
 
   return (
-    <div className='min-h-screen flex flex-col gap-4 items-center justify-center bg-neutral-400'>
-      <SearchBox value={search} onChange={setSearch} />
-      <Displayer search={search.trim() === "" ? undefined : { search }} />
+    <div className='min-h-screen flex flex-col gap-4 items-center justify-center'>
+      <SearchBox search={search} setSearch={setSearch} />
+      <Displayer search={search} />
     </div>)
 }
