@@ -1,15 +1,31 @@
+import { items } from "../app/data/fakedata.ts"
+
 type item = {
   id: number;
   name: string;
   price: number;
   category: string;
 }
-let items: Array<item> = []
+
+// let items: Array<item> =
 
 function addItem(item: item) {
   items.push(item)
   console.log(`items array updated`, items)
 }
+
+function getPriceRange(items: Array<item>): { range_1: number, range_2: number } {
+  if (items.length === 0) return { range_1: 0, range_2: 0 }
+  return items.reduce((acc, item) => ({
+    range_1: Math.min(acc.range_1, item.price),
+    range_2: Math.max(acc.range_2, item.price),
+  }), { range_1: Infinity, range_2: -Infinity }
+  )
+}
+
+
+
+
 
 type search = {
   search?: string;
@@ -38,8 +54,11 @@ function searchInArray(search: search): string | item | Array<item> {
   return result
 }
 
-addItem({ id: 1, name: "product_1", price: 1, category: "tech" })
-addItem({ id: 2, name: "product_2", price: 5, category: "food" })
-addItem({ id: 3, name: "product_3", price: 2, category: "tech" })
 
-searchInArray({ search: "product", price: 1 })
+console.log(getPriceRange(items))
+
+// addItem({ id: 1, name: "product_1", price: 1, category: "tech" })
+// addItem({ id: 2, name: "product_2", price: 5, category: "food" })
+// addItem({ id: 3, name: "product_3", price: 2, category: "tech" })
+//
+// searchInArray({ search: "product", price: 1 })

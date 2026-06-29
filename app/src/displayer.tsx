@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { items } from "../data/fakedata.ts"
+import { useProducts } from "../data/product.data.ts"
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card.tsx";
 
 type search = {
@@ -8,8 +10,21 @@ type search = {
 }
 
 export const Displayer = ({ search }: { search?: search }) => {
-  let data = items
+  let data = items;
+
+  useEffect(() => {
+    if (data.length === 0) return useProducts.getState().setRange({ range_1: 0, range_2: 0 })
+    const range = data.reduce((acc, item) => ({
+      range_1: Math.min(acc.range_1, item.price),
+      range_2: Math.max(acc.range_2, item.price)
+    }), { range_1: Infinity, range_2: -Infinity })
+
+    return useProducts.getState().setRange({ range_1: range.range_1, range_2: range.range_2 })
+  }, [data])
+
+
   if (search) {
+
     console.log(search)
     if (!search.search && !search.price && !search.category) {
       return (

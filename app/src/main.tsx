@@ -7,6 +7,7 @@ import { Input } from './components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from './components/ui/popover'
 import { Button } from './components/ui/button'
 import { ListSortDescendingIcon, Search } from 'lucide-react'
+import { useProducts } from '../data/product.data.ts'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -22,6 +23,8 @@ type Search = {
 
 function SearchBox({ search, setSearch }: { search: Search, setSearch: React.Dispatch<React.SetStateAction<Search>> }) {
 
+  const priceRange = useProducts((state) => state.range)
+
   const handleSearchChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setSearch((prev) => ({ ...prev, [name]: value }))
@@ -29,6 +32,9 @@ function SearchBox({ search, setSearch }: { search: Search, setSearch: React.Dis
 
   if (search) {
     console.log(search)
+  }
+  if (priceRange) {
+    console.log(priceRange)
   }
   return (
     <div className='flex gap-2 items-center'>
