@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './components/ui/popover
 import { Button } from './components/ui/button'
 import { ListSortDescendingIcon, Search } from 'lucide-react'
 import { useProducts } from '../data/product.data.ts'
+import { PriceSlider } from './components/ui-displayer/price-slider.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -17,13 +18,14 @@ createRoot(document.getElementById('root')!).render(
 
 type Search = {
   search: string,
-  price: string,
+  price: [number, number] | null,
   category: string,
 }
 
 function SearchBox({ search, setSearch }: { search: Search, setSearch: React.Dispatch<React.SetStateAction<Search>> }) {
 
   const priceRange = useProducts((state) => state.range)
+  const categorys = useProducts((state) => state.categorys)
 
   const handleSearchChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -33,8 +35,8 @@ function SearchBox({ search, setSearch }: { search: Search, setSearch: React.Dis
   if (search) {
     console.log(search)
   }
-  if (priceRange) {
-    console.log(priceRange)
+  if (priceRange && categorys) {
+    console.log(priceRange, categorys)
   }
   return (
     <div className='flex gap-2 items-center'>
@@ -45,7 +47,12 @@ function SearchBox({ search, setSearch }: { search: Search, setSearch: React.Dis
         </PopoverTrigger>
         <PopoverContent>
           <p>Price search</p>
-          <Input name='price' placeholder='price' type="number" value={search.price ?? ""} onChange={handleSearchChanges} />
+          <PriceSlider min={priceRange.range_1} max={priceRange.range_2}
+
+            value={search.price ?? [priceRange.range_1, priceRange.range_2]}
+            onChange={(v) => setSearch(prev => ({ ...prev, price: v }))}
+          />
+
           <p>Category search</p>
           <Input name='category' placeholder='category' type='text' value={search.category ?? ""} onChange={handleSearchChanges} />
         </PopoverContent>
@@ -56,7 +63,7 @@ function SearchBox({ search, setSearch }: { search: Search, setSearch: React.Dis
 
 }
 function App() {
-  const [search, setSearch] = useState({ search: "", price: "", category: "" })
+  const [search, setSearch] = useState<Search>({ search: "", price: null, category: "" })
 
 
 

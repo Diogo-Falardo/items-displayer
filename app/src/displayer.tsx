@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card.t
 
 type search = {
   search?: string;
-  price?: string;
+  price?: [number, number] | null;
   category?: string;
 }
 
@@ -13,14 +13,28 @@ export const Displayer = ({ search }: { search?: search }) => {
   let data = items;
 
   useEffect(() => {
-    if (data.length === 0) return useProducts.getState().setRange({ range_1: 0, range_2: 0 })
+    if (data.length === 0) {
+      useProducts.getState().updateMany({
+        range: { range_1: 0, range_2: 0 },
+        categorys: new Set()
+      })
+    }
+
     const range = data.reduce((acc, item) => ({
       range_1: Math.min(acc.range_1, item.price),
       range_2: Math.max(acc.range_2, item.price)
     }), { range_1: Infinity, range_2: -Infinity })
 
-    return useProducts.getState().setRange({ range_1: range.range_1, range_2: range.range_2 })
+
+    const categorys = new Set(data.map((item) => item.category))
+
+    useProducts.getState().updateMany({
+      range: { range_1: range.range_1, range_2: range.range_2 }
+      ,
+      categorys: categorys
+    })
   }, [data])
+
 
 
   if (search) {
@@ -50,7 +64,7 @@ export const Displayer = ({ search }: { search?: search }) => {
 
         const matchesSearch = !search.search || item.name.toLowerCase().includes(search.search.toLowerCase())
 
-        const matchesPrice = !search.price || item.price === Number(search.price)
+        const matchesPrice = !search.price || (item.price >= Number(search.price[0]) && item.price <= Number(search.price[1]))
 
         const matchesCategory = !search.category || item.category === search.category
 

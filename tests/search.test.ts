@@ -23,13 +23,14 @@ function getPriceRange(items: Array<item>): { range_1: number, range_2: number }
   )
 }
 
-
-
+function getCategorys(items: Array<item>): Set<string> {
+  return new Set(items.map((item) => item.category))
+}
 
 
 type search = {
   search?: string;
-  price?: number;
+  price?: [number, number];
   category?: string;
 }
 function searchInArray(search: search): string | item | Array<item> {
@@ -43,7 +44,7 @@ function searchInArray(search: search): string | item | Array<item> {
 
     const matchesSearch = !search.search || item.name.toLowerCase().includes(search.search.toLowerCase())
 
-    const matchesPrice = !search.price || item.price === search.price
+    const matchesPrice = !search.price || (item.price >= search.price[0] && item.price <= search.price[1])
 
     const matchesCategory = !search.category || item.category === search.category
 
@@ -56,6 +57,7 @@ function searchInArray(search: search): string | item | Array<item> {
 
 
 console.log(getPriceRange(items))
+console.log(getCategorys(items))
 
 // addItem({ id: 1, name: "product_1", price: 1, category: "tech" })
 // addItem({ id: 2, name: "product_2", price: 5, category: "food" })
