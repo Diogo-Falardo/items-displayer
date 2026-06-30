@@ -9,6 +9,7 @@ import { Button } from './components/ui/button'
 import { ListSortDescendingIcon, Search } from 'lucide-react'
 import { useProducts } from '../data/product.data.ts'
 import { PriceSlider } from './components/ui-displayer/price-slider.tsx'
+import { CategorySelector } from './components/ui-displayer/category-selector.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -19,7 +20,7 @@ createRoot(document.getElementById('root')!).render(
 type Search = {
   search: string,
   price: [number, number] | null,
-  category: string,
+  categorys: Set<string> | null,
 }
 
 function SearchBox({ search, setSearch }: { search: Search, setSearch: React.Dispatch<React.SetStateAction<Search>> }) {
@@ -52,9 +53,8 @@ function SearchBox({ search, setSearch }: { search: Search, setSearch: React.Dis
             value={search.price ?? [priceRange.range_1, priceRange.range_2]}
             onChange={(v) => setSearch(prev => ({ ...prev, price: v }))}
           />
-
           <p>Category search</p>
-          <Input name='category' placeholder='category' type='text' value={search.category ?? ""} onChange={handleSearchChanges} />
+          <CategorySelector categorys={categorys} selected={search.categorys} onChange={(next) => setSearch(prev => ({ ...prev, categorys: next }))} />
         </PopoverContent>
       </Popover>
     </div>
@@ -63,7 +63,7 @@ function SearchBox({ search, setSearch }: { search: Search, setSearch: React.Dis
 
 }
 function App() {
-  const [search, setSearch] = useState<Search>({ search: "", price: null, category: "" })
+  const [search, setSearch] = useState<Search>({ search: "", price: null, categorys: null })
 
 
 

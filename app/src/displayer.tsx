@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card.t
 type search = {
   search?: string;
   price?: [number, number] | null;
-  category?: string;
+  categorys?: Set<string> | null;
 }
 
 export const Displayer = ({ search }: { search?: search }) => {
@@ -40,7 +40,7 @@ export const Displayer = ({ search }: { search?: search }) => {
   if (search) {
 
     console.log(search)
-    if (!search.search && !search.price && !search.category) {
+    if (!search.search && !search.price && !search.categorys) {
       return (
         <div className="grid grid-cols-4 gap-4">
           {data.map((item) => <Card className="w-xs" key={item.id} >
@@ -66,7 +66,7 @@ export const Displayer = ({ search }: { search?: search }) => {
 
         const matchesPrice = !search.price || (item.price >= Number(search.price[0]) && item.price <= Number(search.price[1]))
 
-        const matchesCategory = !search.category || item.category === search.category
+        const matchesCategory = !search.categorys || search.categorys.size === 0 || search.categorys.has(item.category)
 
         return matchesSearch && matchesPrice && matchesCategory
       })

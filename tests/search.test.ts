@@ -31,10 +31,10 @@ function getCategorys(items: Array<item>): Set<string> {
 type search = {
   search?: string;
   price?: [number, number];
-  category?: string;
+  categorys?: Set<string>
 }
 function searchInArray(search: search): string | item | Array<item> {
-  if (!search.search && !search.price && !search.category) {
+  if (!search.search && !search.price && !search.categorys) {
     console.log("invalid search")
     return "invalid search"
   }
@@ -46,7 +46,7 @@ function searchInArray(search: search): string | item | Array<item> {
 
     const matchesPrice = !search.price || (item.price >= search.price[0] && item.price <= search.price[1])
 
-    const matchesCategory = !search.category || item.category === search.category
+    const matchesCategory = !search.categorys || search.categorys.has(item.category)
 
     return matchesSearch && matchesPrice && matchesCategory
   })
@@ -63,4 +63,4 @@ console.log(getCategorys(items))
 // addItem({ id: 2, name: "product_2", price: 5, category: "food" })
 // addItem({ id: 3, name: "product_3", price: 2, category: "tech" })
 //
-// searchInArray({ search: "product", price: 1 })
+searchInArray({ categorys: new Set(["tech", "sports"]) })
